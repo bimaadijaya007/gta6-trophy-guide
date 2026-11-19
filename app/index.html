@@ -3,23 +3,118 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GTA VI trophy checklist</title>
+<title>GTA 6 Trophy Guide — Vice Got a Price! | Offline Tracker</title>
+<meta name="description" content="The complete offline guide and tracker for all 55 Grand Theft Auto VI trophies on PlayStation 5: official names, descriptions and grades, a roadmap to the platinum, missable flags, and a cited guide for every trophy.">
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>GTA VI trophy checklist</h1>
-  <p id="progress">0 of 55 earned</p>
+<header class="top">
+  <div class="top-inner">
+    <div>
+      <p class="eyebrow">Grand Theft Auto VI &middot; PlayStation 5 &middot; 55 trophies</p>
+      <h1>GTA 6 Trophy Guide</h1>
+      <p class="subtitle">Roadmap to the platinum <strong>&ldquo;Vice Got a Price!&rdquo;</strong> — every trophy, every guide, every source. Works fully offline; progress is saved in your browser.</p>
+    </div>
+    <div class="facts" aria-label="Key facts">
+      <div class="fact"><span class="fact-num">55</span><span class="fact-label">trophies</span></div>
+      <div class="fact"><span class="fact-num">0</span><span class="fact-label">online</span></div>
+      <div class="fact"><span class="fact-num">~200h</span><span class="fact-label">to platinum</span></div>
+      <div class="fact"><span class="fact-num">1</span><span class="fact-label">playthrough</span></div>
+      <div class="fact"><span class="fact-num">4/10</span><span class="fact-label">difficulty</span></div>
+    </div>
+  </div>
 </header>
-<div class="controls">
-  <label>Grade <select id="grade"><option value="all">All</option><option value="platinum">Platinum</option><option value="gold">Gold</option><option value="silver">Silver</option><option value="bronze">Bronze</option></select></label>
-  <button id="export" type="button">Export progress</button>
-  <label class="import">Import progress <input id="import" type="file" accept="application/json"></label>
-</div>
-<table>
-  <thead><tr><th>Earned</th><th>Trophy</th><th>Grade</th><th>How to get it</th></tr></thead>
-  <tbody id="rows"></tbody>
-</table>
-<script type="module" src="app.js"></script>
+
+<main>
+  <section class="progress-card" aria-label="Progress">
+    <div class="progress-head">
+      <div>
+        <h2 id="progressText">0 / 55 earned</h2>
+        <p id="gradeBreakdown" class="muted">Platinum 0/1 &middot; Gold 0/2 &middot; Silver 0/6 &middot; Bronze 0/46</p>
+      </div>
+      <p id="progressPct" class="pct">0%</p>
+    </div>
+    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="55" aria-valuenow="0" id="progressBar"><div id="progressFill"></div></div>
+    <p class="muted small">Tick a trophy when you earn it in-game. Progress is stored in this browser only (localStorage) and never leaves your device.</p>
+  </section>
+
+  <section class="toolbar" aria-label="Filters and tools">
+    <div class="toolbar-row">
+      <label class="search-wrap">Search
+        <input id="search" type="search" placeholder="Search name, description or guide&hellip;" autocomplete="off">
+      </label>
+      <label>Grade
+        <select id="gradeFilter">
+          <option value="all">All grades</option>
+          <option value="platinum">Platinum</option>
+          <option value="gold">Gold</option>
+          <option value="silver">Silver</option>
+          <option value="bronze">Bronze</option>
+        </select>
+      </label>
+    </div>
+    <div class="toolbar-row">
+      <div class="kind-filters" id="kindFilters" role="group" aria-label="Filter by kind">
+        <button type="button" data-kind="all" class="active">All kinds</button>
+        <button type="button" data-kind="story">Story</button>
+        <button type="button" data-kind="missable">Missable</button>
+        <button type="button" data-kind="collectible">Collectibles</button>
+        <button type="button" data-kind="activity">Activities</button>
+        <button type="button" data-kind="combat">Combat</button>
+        <button type="button" data-kind="economy">Economy</button>
+        <button type="button" data-kind="exploration">Exploration</button>
+      </div>
+    </div>
+    <div class="toolbar-row">
+      <label class="toggle"><input type="checkbox" id="hideEarned"> Hide earned</label>
+      <label class="toggle"><input type="checkbox" id="spoilerToggle"> Spoiler-free mode <span class="muted">(hide story trophy names &amp; descriptions until earned)</span></label>
+      <span class="spacer"></span>
+      <button type="button" id="exportBtn">Export progress (JSON)</button>
+      <button type="button" id="importBtn">Import progress</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+      <button type="button" id="resetBtn" class="danger">Reset</button>
+    </div>
+    <p id="listCount" class="muted small" aria-live="polite"></p>
+  </section>
+
+  <div class="tracker-grid">
+    <section aria-label="Trophy checklist">
+      <ul id="trophyList" class="trophy-list"></ul>
+      <p id="emptyState" class="muted" hidden>No trophies match these filters. Clear the search or pick another kind.</p>
+    </section>
+    <aside class="detail" aria-label="Trophy detail">
+      <div id="detail" class="detail-card">
+        <p class="muted">Select a trophy from the list to see its guide, steps and sources.</p>
+      </div>
+    </aside>
+  </div>
+
+  <section class="roadmap" aria-label="Roadmap to the platinum">
+    <h2>Roadmap to the platinum</h2>
+    <p class="muted">Six stages, in order. Work them top to bottom: the story first, then the 100% checklist, then side strands, collectibles, activities and the final grinds. The counts update as you tick trophies off.</p>
+    <ol id="roadmapStages" class="stages"></ol>
+  </section>
+
+  <section class="missables" aria-label="Missable trophies">
+    <h2>Missables &amp; warnings</h2>
+    <div id="missableList"></div>
+    <h3>Before you start</h3>
+    <ul class="tips">
+      <li><strong>Only one trophy is reported as potentially missable</strong> — see above. Every other trophy can be earned in free-roam after the story.</li>
+      <li><strong>There is no mission replay.</strong> The game has 15 manual save slots plus 1 autosave slot: keep a save at the start and end of each chapter, then rotate the remaining slots for free-roam cleanup.</li>
+      <li><strong>Cheats disable trophies and saving.</strong> Keep cheats off on your trophy run.</li>
+      <li><strong>No online trophies.</strong> All 55 trophies are single-player and offline — no multiplayer, no DLC and no online mode is needed for the platinum.</li>
+      <li><strong>There are no difficulty settings</strong> and no New Game+, so one playthrough is enough.</li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <p><strong>About this guide.</strong> Trophy names, descriptions and grades are the official PlayStation list (via Exophase, reported by Push Square, 18 November 2026). Every guide is written in our own words for this page, drawing on the cited sources — PowerPyx and GTABase — and says so beside each trophy. Five trophies were still unconfirmed at launch (In The Beginning…, Capital Offense, Bad Luck I Guess, The Truth Is Out There, Ten Pin); their guides say so honestly instead of inventing a method. Sources are shown as plain text so this page never reaches for the network.</p>
+  <p class="muted small">Fan-made guide. Not affiliated with Rockstar Games. No official artwork, logos or game screenshots are used. Data: 19 November 2026.</p>
+</footer>
+
+<script src="app.js" type="module"></script>
 </body>
 </html>
